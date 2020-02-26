@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "классыЛаба2", "классыЛаба2\классыЛаба2.csproj", "{699C4F3A-FA2D-41A7-8185-FCAF9CAC46E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{699C4F3A-FA2D-41A7-8185-FCAF9CAC46E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{699C4F3A-FA2D-41A7-8185-FCAF9CAC46E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{699C4F3A-FA2D-41A7-8185-FCAF9CAC46E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{699C4F3A-FA2D-41A7-8185-FCAF9CAC46E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
