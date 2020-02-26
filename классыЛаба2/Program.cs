@@ -1,18 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace классыЛаба2
 {
+    [Serializable]
     /// <summary>
     /// абстрактный класс телефонная книга
     /// так так адрес и телефон есть у всех представителей класса, записываем эти параметры в абстрактный класс
     /// </summary>
-    abstract class Phonebook
+    public abstract class Phonebook
     {
         
         public string Address { get; set; }
         public string Number { get; set; }
+        /// <summary>
+        /// конструктор по умолчанию
+        /// </summary>
+        public Phonebook() { }
+        /// <summary>
+        /// конструктор для Phonebook
+        /// </summary>
+        /// <param name="address">Адрес</param>
+        /// <param name="number">Номер</param>
         public Phonebook(string address, string number)
         {
             Address = address;
@@ -30,12 +42,17 @@ namespace классыЛаба2
         /// <returns>возвращает строку, в которой храниться результат</returns>
         public abstract string request(string characteristic);
     }
+    [Serializable]
     /// <summary>
     /// производный класс: Человек 
     /// </summary>
-    class Person : Phonebook
+    public class Person : Phonebook
     {
-        string LastName { get; set; }
+        public string LastName { get; set; }
+        /// <summary>
+        /// конструктор по умолчанию 
+        /// </summary>
+        public Person() { }
         /// <summary>
         /// конструктор класса Person
         /// </summary>
@@ -52,6 +69,7 @@ namespace классыЛаба2
         public override void print()
         {
             Console.WriteLine("PERSON Фамилия: " + LastName + ", Адрес: " +Address + ", Номер: " + Number);
+            Trace.WriteLine("Работа метода print для класса Person была завершена");
         }
         /// <summary>
         /// определение метода запроса к базе для класса Person
@@ -63,19 +81,25 @@ namespace классыЛаба2
             string input = "";
             if (Name == LastName)
                 input = input + "Фамилия: " + LastName + ", Адрес: " + Address + ", Номер: " + Number;
+            Trace.WriteLine("Работа метода request для класса Person была завершена");
             return input;
         }
 
 
     }
+    [Serializable]
     /// <summary>
     /// производный класс: Организация
     /// </summary>
-    class Organization : Phonebook
+    public class Organization : Phonebook
     {
-        string OrgName { get; set; }
-        string Fax { get; set; }
-        string ContactPerson { get; set; }
+        public string OrgName { get; set; }
+        public string Fax { get; set; }
+        public string ContactPerson { get; set; }
+        /// <summary>
+        /// конструктор по умолчанию 
+        /// </summary>
+        public Organization() { }
         /// <summary>
         /// конструктор класса Organization
         /// </summary>
@@ -97,6 +121,7 @@ namespace классыЛаба2
         public override void print()
         {
             Console.WriteLine("ORGANIZATION Название организации: " + OrgName + ", Адрес: " + Address + ", Номер: " + Number + ", Факс: " + Fax + ", Контактное лицо: " + ContactPerson);
+            Trace.WriteLine("Работа метода print для класса Organization была завершена");
         }
         /// <summary>
         /// определение метода запроса к базе для класса Organization
@@ -108,16 +133,19 @@ namespace классыЛаба2
             string input="";
             if (Name==OrgName)
                 input = input + "Название организации: " + OrgName + ", Адрес: " + Address + ", Номер: " + Number + ", Факс: " + Fax + ", Контактное лицо: " + ContactPerson;
+            Trace.WriteLine("Работа метода request для класса Organization была завершена");
             return input;
         }
     }
+    [Serializable]
     /// <summary>
     /// происводный класс: Друг
     /// </summary>
-    class Friend : Phonebook
+    public class Friend : Phonebook
     {
-        string LastName { get; set; }
-        DateTime Birthday { get; set; }
+        public string LastName { get; set; }
+        public DateTime Birthday { get; set; }
+        public Friend() { }
         /// <summary>
         /// конструктор класса Friend
         /// </summary>
@@ -137,6 +165,7 @@ namespace классыЛаба2
         public override void print()
         {
             Console.WriteLine("FRIEND Фамилия: " + LastName + ", Адрес: " + Address + ", Номер: " + Number + ", День Рождения: " + Birthday);
+            Trace.WriteLine("Работа метода print для класса Friend была завершена");
         }
         /// <summary>
         /// определение метода запроса к базе для класса Friend
@@ -148,6 +177,7 @@ namespace классыЛаба2
             string input="";
             if (Name==LastName)
                 input = input + "Фамилия: " + LastName + ", Адрес: " + Address + ", Номер: " + Number + ", День Рождения: " + Birthday + "\n";
+            Trace.WriteLine("Работа метода request для класса Friend была завершена");
             return input;
         }
     }
@@ -175,7 +205,6 @@ namespace классыЛаба2
                     arrDatabase[i, j] = temp[j];
             }
             return arrDatabase;
-
         }
         /// <summary>
         /// метод добавления в список и разделения на классы
@@ -209,7 +238,7 @@ namespace классыЛаба2
             string inFile = Console.ReadLine();
             string[,] arrDatabase = Read(inFile);
             ///Users/gggisss/Downloads/пп.txt
-            List<Phonebook> phonebook = new List<Phonebook>();
+            List <Phonebook> phonebook = new List<Phonebook>();
             phonebook = Add(phonebook, arrDatabase);
             int k = 0;
             while (k!=3)
@@ -248,8 +277,40 @@ namespace классыЛаба2
                         "3). выход из программы");
                     k = Convert.ToInt32(Console.ReadLine());
                 }
-                    
+
             }
+
+            if (File.Exists("data.xml"))
+                File.Delete("data.xml");
+            foreach (Phonebook p in phonebook)
+            {
+                if(Convert.ToString(p.GetType())== "классыЛаба2.Person")
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(Person));
+                    using (FileStream fs = new FileStream("data.xml", FileMode.Append))
+                    {
+                        serializer.Serialize(fs, p);
+                    }
+                }
+                else if (Convert.ToString(p.GetType()) == "классыЛаба2.Organization")
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(Organization));
+                    using (FileStream fs = new FileStream("data.xml", FileMode.Append))
+                    {
+                        serializer.Serialize(fs, p);
+                    }
+                }
+                else if (Convert.ToString(p.GetType()) == "классыЛаба2.Friend")
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(Friend));
+                    using (FileStream fs = new FileStream("data.xml", FileMode.Append))
+                    {
+                        serializer.Serialize(fs, p);
+                    }
+                }
+
+            }
+            
         }
     }
 }
